@@ -2,71 +2,84 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TK List</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TK List</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #10131a;
-      color: white;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #10131a;
+  color: white;
+}
 
-    header {
-      padding: 25px;
-      text-align: center;
-      background: #171b25;
-    }
+header {
+  background: #171b25;
+  padding: 25px;
+  text-align: center;
+}
 
-    h1 {
-      margin: 0;
-      font-size: 32px;
-    }
+h1 {
+  margin: 0;
+}
 
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      padding: 15px;
-      background: #141821;
-    }
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px;
+  background: #141821;
+  flex-wrap: wrap;
+}
 
-    button {
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      background: #272d3a;
-      color: white;
-      font-size: 15px;
-    }
+button {
+  border: 0;
+  padding: 11px 18px;
+  border-radius: 8px;
+  background: #292f3d;
+  color: white;
+  font-size: 15px;
+}
 
-    button:hover {
-      background: #394153;
-    }
+button:hover {
+  background: #3b4354;
+}
 
-    main {
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
-    }
+main {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
 
-    .level {
-      background: #191e29;
-      margin: 10px 0;
-      padding: 16px;
-      border-radius: 10px;
-    }
+.level {
+  background: #191e29;
+  padding: 16px;
+  margin: 10px 0;
+  border-radius: 10px;
+}
 
-    .level h3 {
-      margin: 0 0 8px;
-    }
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #394153;
+  background: #171b25;
+  color: white;
+}
 
-    .hidden {
-      display: none;
-    }
-  </style>
+.hidden {
+  display: none;
+}
+
+.admin-box {
+  background: #191e29;
+  padding: 20px;
+  border-radius: 10px;
+}
+</style>
 </head>
 
 <body>
@@ -78,33 +91,69 @@
 <div class="tabs">
   <button onclick="showTab('levels')">Levels</button>
   <button onclick="showTab('players')">Players</button>
-  <button onclick="showTab('admin')">Admin</button>
+  <button onclick="showAdmin()">Admin</button>
 </div>
 
 <main>
 
-  <section id="levels">
-    <h2>Levels</h2>
+<section id="levels">
+  <h2>Levels</h2>
 
+  <div id="levelList">
     <div class="level">
       <h3>TK Level 1</h3>
       <p>Sin niveles agregados todavía.</p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="players" class="hidden">
-    <h2>Players</h2>
-    <p>No hay jugadores agregados todavía.</p>
-  </section>
+<section id="players" class="hidden">
+  <h2>Players</h2>
+  <p>No hay jugadores agregados todavía.</p>
+</section>
 
-  <section id="admin" class="hidden">
-    <h2>Admin</h2>
-    <p>Panel de administración próximamente.</p>
-  </section>
+<section id="admin" class="hidden">
+
+  <div id="loginBox" class="admin-box">
+    <h2>🔐 Administrador</h2>
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Contraseña"
+    >
+
+    <button onclick="login()">Entrar</button>
+
+    <p id="loginMessage"></p>
+  </div>
+
+  <div id="adminPanel" class="admin-box hidden">
+    <h2>⚙️ Panel de administrador</h2>
+
+    <h3>Agregar nivel</h3>
+
+    <input
+      type="text"
+      id="levelName"
+      placeholder="Nombre del nivel"
+    >
+
+    <button onclick="addLevel()">Agregar nivel</button>
+
+    <h3>Niveles</h3>
+
+    <div id="adminLevels"></div>
+  </div>
+
+</section>
 
 </main>
 
 <script>
+
+const ADMIN_PASSWORD = "1234";
+
 function showTab(tab) {
   document.getElementById("levels").classList.add("hidden");
   document.getElementById("players").classList.add("hidden");
@@ -112,6 +161,132 @@ function showTab(tab) {
 
   document.getElementById(tab).classList.remove("hidden");
 }
+
+function showAdmin() {
+  showTab("admin");
+
+  document.getElementById("loginBox").classList.remove("hidden");
+  document.getElementById("adminPanel").classList.add("hidden");
+}
+
+function login() {
+
+  const password =
+    document.getElementById("password").value;
+
+  if (password === ADMIN_PASSWORD) {
+
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("adminPanel").classList.remove("hidden");
+
+    updateAdminLevels();
+
+  } else {
+
+    document.getElementById("loginMessage").textContent =
+      "❌ Contraseña incorrecta";
+
+  }
+}
+
+function addLevel() {
+
+  const name =
+    document.getElementById("levelName").value.trim();
+
+  if (name === "") {
+    return;
+  }
+
+  const levels =
+    JSON.parse(localStorage.getItem("tkLevels") || "[]");
+
+  levels.push(name);
+
+  localStorage.setItem(
+    "tkLevels",
+    JSON.stringify(levels)
+  );
+
+  document.getElementById("levelName").value = "";
+
+  updateLevels();
+  updateAdminLevels();
+}
+
+function deleteLevel(index) {
+
+  const levels =
+    JSON.parse(localStorage.getItem("tkLevels") || "[]");
+
+  levels.splice(index, 1);
+
+  localStorage.setItem(
+    "tkLevels",
+    JSON.stringify(levels)
+  );
+
+  updateLevels();
+  updateAdminLevels();
+}
+
+function updateLevels() {
+
+  const container =
+    document.getElementById("levelList");
+
+  const levels =
+    JSON.parse(localStorage.getItem("tkLevels") || "[]");
+
+  if (levels.length === 0) {
+
+    container.innerHTML =
+      "<p>No hay niveles.</p>";
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  levels.forEach((level, index) => {
+
+    container.innerHTML += `
+      <div class="level">
+        <h3>${level}</h3>
+        <p>TK List</p>
+      </div>
+    `;
+
+  });
+}
+
+function updateAdminLevels() {
+
+  const container =
+    document.getElementById("adminLevels");
+
+  const levels =
+    JSON.parse(localStorage.getItem("tkLevels") || "[]");
+
+  container.innerHTML = "";
+
+  levels.forEach((level, index) => {
+
+    container.innerHTML += `
+      <div class="level">
+        <strong>${level}</strong>
+        <br><br>
+        <button onclick="deleteLevel(${index})">
+          🗑️ Eliminar
+        </button>
+      </div>
+    `;
+
+  });
+}
+
+updateLevels();
+
 </script>
 
 </body>
