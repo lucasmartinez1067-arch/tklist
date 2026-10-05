@@ -1,0 +1,119 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TK List</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #10131a;
+      color: white;
+    }
+
+    header {
+      padding: 25px;
+      text-align: center;
+      background: #171b25;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px;
+      background: #141821;
+    }
+
+    button {
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      background: #272d3a;
+      color: white;
+      font-size: 15px;
+    }
+
+    button:hover {
+      background: #394153;
+    }
+
+    main {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .level {
+      background: #191e29;
+      margin: 10px 0;
+      padding: 16px;
+      border-radius: 10px;
+    }
+
+    .level h3 {
+      margin: 0 0 8px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>TK List</h1>
+</header>
+
+<div class="tabs">
+  <button onclick="showTab('levels')">Levels</button>
+  <button onclick="showTab('players')">Players</button>
+  <button onclick="showTab('admin')">Admin</button>
+</div>
+
+<main>
+
+  <section id="levels">
+    <h2>Levels</h2>
+
+    <div class="level">
+      <h3>TK Level 1</h3>
+      <p>Sin niveles agregados todavía.</p>
+    </div>
+  </section>
+
+  <section id="players" class="hidden">
+    <h2>Players</h2>
+    <p>No hay jugadores agregados todavía.</p>
+  </section>
+
+  <section id="admin" class="hidden">
+    <h2>Admin</h2>
+    <p>Panel de administración próximamente.</p>
+  </section>
+
+</main>
+
+<script>
+function showTab(tab) {
+  document.getElementById("levels").classList.add("hidden");
+  document.getElementById("players").classList.add("hidden");
+  document.getElementById("admin").classList.add("hidden");
+
+  document.getElementById(tab).classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
+```
